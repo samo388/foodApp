@@ -1,6 +1,19 @@
-import axios from "axios";
+import api from "./api";
 
 export const getAllFoods = async () => {
-  const response = await axios.get("/api/foods");
-  return response.data;
+  const response = await api.get("/foods");
+
+  if (Array.isArray(response.data)) {
+    return response.data;
+  }
+
+  if (Array.isArray(response.data.foods)) {
+    return response.data.foods;
+  }
+
+  if (Array.isArray(response.data.data)) {
+    return response.data.data;
+  }
+
+  return [];
 };
