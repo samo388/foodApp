@@ -1,0 +1,107 @@
+# Application Overview – FoodApp
+
+## 1. General Description
+FoodApp is a full-stack web application designed to simulate a real-world food ordering platform.
+The project is used as a base application to demonstrate a complete, production-ready DevOps
+workflow including containerization, CI/CD automation, infrastructure as code, monitoring, and security.
+
+The application follows a client-server architecture with a clear separation between frontend,
+backend, and database layers.
+
+---
+
+## 2. Architecture Overview
+
+Frontend (Client)
+? communicates with Backend via REST API  
+Backend (API Server)
+? handles business logic, authentication, and data processing  
+Database
+? stores application data (users, products, orders)
+
+Target Architecture:
+- Cloud-native
+- Containerized
+- Scalable
+- Highly available
+
+---
+
+## 3. Technology Stack
+
+### Frontend
+- Framework: React
+- Build Tool: Vite
+- Communication: REST API (HTTP/JSON)
+- Port: 5173 (local development)
+
+### Backend
+- Runtime: Node.js
+- Framework: Express.js
+- API Style: RESTful APIs
+- Authentication: JWT
+- Port: 5000 (default)
+
+### Database
+- Type: Relational Database
+- Engine: PostgreSQL
+- Accessed only by backend service
+- Not exposed publicly
+
+---
+
+## 4. Environment Variables
+
+### Backend Required Environment Variables
+- PORT: Backend service port
+- DB_HOST: Database host
+- DB_USER: Database username
+- DB_PASSWORD: Database password
+- DB_NAME: Database name
+- JWT_SECRET: Secret key for authentication tokens
+
+Environment variables are injected at runtime and never hardcoded in the source code.
+
+---
+
+## 5. Deployment Strategy (Target)
+
+### Local Development
+- Docker Compose
+- Separate containers for frontend, backend, and database
+
+### Production
+- Docker images built via CI/CD pipeline
+- Deployed on Kubernetes (EKS)
+- Infrastructure provisioned using Terraform
+- Secrets managed using a secure secrets manager
+- Traffic exposed via Load Balancer / Ingress
+
+---
+
+## 6. Non-Functional Requirements
+
+- Scalability: Horizontal scaling using Kubernetes HPA
+- Availability: Multi-node Kubernetes cluster
+- Security:
+  - No secrets in code
+  - Least privilege access
+  - Image vulnerability scanning
+- Observability:
+  - Metrics via Prometheus
+  - Dashboards via Grafana
+  - Centralized logging
+
+---
+
+## 7. DevOps Purpose of the Project
+
+This project is intentionally used as a DevOps transformation case to demonstrate:
+- CI/CD pipeline design
+- Infrastructure as Code best practices
+- Cloud-native deployment patterns
+- Monitoring, logging, and alerting
+- Disaster recovery and rollback strategies
+
+The goal is not the application features themselves, but the robustness and reliability
+of the platform running the application.
