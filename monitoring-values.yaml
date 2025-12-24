@@ -1,0 +1,10 @@
+# monitoring-values.yaml
+
+prometheus-node-exporter:
+  enabled: false
+
+grafana:
+  enabled: true
+
+alertmanager:
+  enabled: true
