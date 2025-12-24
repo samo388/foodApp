@@ -1,5 +1,5 @@
 # =========================
-# Build Stage
+# Builder stage
 # =========================
 FROM node:20-alpine AS builder
 
@@ -8,10 +8,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-COPY . .
+COPY src ./src
+COPY seed.js .
 
 # =========================
-# Runtime Stage
+# Runtime stage
 # =========================
 FROM node:20-alpine
 
@@ -30,4 +31,4 @@ USER appuser
 
 EXPOSE 5000
 
-CMD ["npm", "start"]
+CMD ["node", "src/server.js"]

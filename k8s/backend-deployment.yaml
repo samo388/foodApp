@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foodapp-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foodapp-backend
+  template:
+    metadata:
+      labels:
+        app: foodapp-backend
+    spec:
+      containers:
+        - name: backend
+          image: sam840/foodapp-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/foodapp"
+            - name: JWT_SECRET
+              value: "foodapp_secret"
