@@ -11,7 +11,7 @@ jobs:
 
     steps:
     # =========================
-    # 1️⃣ Checkout Source Code
+    # 1️⃣ Checkout Code
     # =========================
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -58,8 +58,40 @@ jobs:
         echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
     # =========================
-    # 7️⃣ Deploy to Kubernetes
+    # 7️⃣ Deploy MongoDB
     # =========================
-    - name: Deploy manifests to Kubernetes
+    - name: Deploy MongoDB
       run: |
-        kubectl apply -f k8s/
+        kubectl apply -f k8s/mongo-pvc.yaml
+        kubectl apply -f k8s/mongo-deployment.yaml
+        kubectl apply -f k8s/mongo-service.yaml
+
+    # =========================
+    # 8️⃣ Deploy Backend
+    # =========================
+    - name: Deploy Backend
+      run: |
+        kubectl apply -f k8s/backend-deployment.yaml
+        kubectl apply -f k8s/backend-service.yaml
+
+    # =========================
+    # 9️⃣ Run Seed Job
+    # =========================
+    - name: Seed Database
+      run: |
+        kubectl apply -f k8s/seed-job.yaml
+
+    # =========================
+    # 🔟 Deploy Frontend
+    # =========================
+    - name: Deploy Frontend
+      run: |
+        kubectl apply -f k8s/frontend-deployment.yaml
+        kubectl apply -f k8s/frontend-service.yaml
+
+    # =========================
+    # 1️⃣1️⃣ Deploy Ingress
+    # =========================
+    - name: Deploy Ingress
+      run: |
+        kubectl apply -f k8s/ingress.yaml
