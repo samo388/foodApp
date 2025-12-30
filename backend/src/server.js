@@ -15,23 +15,23 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// ================== PROMETHEUS METRICS ==================
+// ================== PROMETHEUS ==================
 const collectDefaultMetrics = client.collectDefaultMetrics;
-collectDefaultMetrics();
+collectDefaultMetrics({ prefix: "foodapp_" });
 
-// Custom HTTP request counter
+// HTTP Requests Counter
 const httpRequestCounter = new client.Counter({
-  name: "http_requests_total",
+  name: "foodapp_http_requests_total",
   help: "Total number of HTTP requests",
-  labelNames: ["method", "route", "status"],
+  labelNames: ["method", "path", "status"],
 });
 
-// Middleware to count requests
+// Count all requests
 app.use((req, res, next) => {
   res.on("finish", () => {
     httpRequestCounter.inc({
       method: req.method,
-      route: req.route?.path || req.path,
+      path: req.path,
       status: res.statusCode,
     });
   });
@@ -51,20 +51,26 @@ mongoose
   .catch((err) => console.error("❌ MongoDB Error:", err));
 
 // ================== MODELS ==================
-const foodSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-  stars: Number,
-  imageUrl: String,
-});
+const foodSchema = new mongoose.Schema(
+  {
+    name: String,
+    price: Number,
+    stars: Number,
+    imageUrl: String,
+  },
+  { timestamps: true }
+);
 
 const Food = mongoose.model("Food", foodSchema);
 
 // ================== ROUTES ==================
+
+// Health check
 app.get("/", (req, res) => {
   res.send("🚀 FoodApp Backend Running");
 });
 
+// Foods API
 app.get("/api/foods", async (req, res) => {
   try {
     const foods = await Food.find();
@@ -73,6 +79,10 @@ app.get("/api/foods", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch foods" });
   }
 });
+
+// Dashboard API
+import dashboardRoutes from "./routes/dashboard.routes.js";
+app.use("/api", dashboardRoutes);
 
 // ================== SERVER ==================
 app.listen(PORT, () => {

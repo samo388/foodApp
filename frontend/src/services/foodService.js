@@ -1,19 +1,18 @@
-import api from "./api";
+const useMock = import.meta.env.VITE_USE_MOCK === "true";
 
-export const getAllFoods = async () => {
-  const response = await api.get("/foods");
-
-  if (Array.isArray(response.data)) {
-    return response.data;
+export async function getAllFoods() {
+  if (useMock) {
+    return [
+      {
+        _id: 1,
+        name: "Burger",
+        price: 120,
+        stars: 4.5,
+        imageUrl: "https://via.placeholder.com/300",
+      },
+    ];
   }
 
-  if (Array.isArray(response.data.foods)) {
-    return response.data.foods;
-  }
-
-  if (Array.isArray(response.data.data)) {
-    return response.data.data;
-  }
-
-  return [];
-};
+  const res = await api.get("/foods");
+  return res.data;
+}
